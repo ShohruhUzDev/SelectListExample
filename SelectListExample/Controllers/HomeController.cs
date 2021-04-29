@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SelectListExample.Data;
 using SelectListExample.Models;
+using SelectListExample.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,6 +26,25 @@ namespace SelectListExample.Controllers
         {
             List<Customer> customers = _dbcontext.Customers.ToList();
             return View(customers);
+        }
+
+        public IActionResult Create()
+        {
+            CustomerCreateModel customerCreateModel = new CustomerCreateModel();
+            customerCreateModel.Customer = new Customer();
+            List<SelectListItem> countries = _dbcontext.Countries
+                .OrderBy(n => n.Name)
+                .Select(n =>
+                new SelectListItem
+                { 
+                    Value=n.Code,
+                    Text=n.Name
+
+                }).ToList();
+            customerCreateModel.Countries = countries;
+            customerCreateModel.Cities = new List<SelectListItem>();
+            return View(customerCreateModel);
+
         }
         public IActionResult Index()
         {
