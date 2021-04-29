@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SelectListExample.Data;
 using SelectListExample.Models;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,19 @@ namespace SelectListExample.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+       
+        private readonly SelectListDbContext _dbcontext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(SelectListDbContext selectListDbContext)
         {
-            _logger = logger;
+            _dbcontext = selectListDbContext ;
         }
 
+        public IActionResult List()
+        {
+            List<Customer> customers = _dbcontext.Customers.ToList();
+            return View(customers);
+        }
         public IActionResult Index()
         {
             return View();
